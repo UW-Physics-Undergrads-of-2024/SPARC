@@ -16,6 +16,9 @@ class MainWindow(qt.QMainWindow):
         self.setWindowTitle("SPARC Visualizer")
         self.setGeometry(100, 100, 600, 600)
 
+        # Add vispy canvas
+        canvas = vp.app.Canvas()
+
         # ******** Add widgets ************
 
         # Add labelled combo box for left magnet position
@@ -57,9 +60,10 @@ class MainWindow(qt.QMainWindow):
 
 
 
-# Declare a Qt application
-app = qt.QApplication(sys.argv)
-window=MainWindow()
-window.show()
-app.exec()
+if __name__ == '__main__':
+    app = qt.QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec()
+
 

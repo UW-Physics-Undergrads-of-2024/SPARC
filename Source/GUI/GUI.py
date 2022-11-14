@@ -16,9 +16,6 @@ class MainWindow(qt.QMainWindow):
         self.setWindowTitle("SPARC Visualizer")
         self.setGeometry(100, 100, 600, 600)
 
-        # Add vispy canvas
-        canvas = vp.app.Canvas()
-
         # ******** Add widgets ************
 
         # Add labelled combo box for left magnet position
@@ -58,6 +55,8 @@ class MainWindow(qt.QMainWindow):
         self.setSceneButton.setStyleSheet("border: 1px solid black;")
         self.setSceneButton.move(300,500)
 
+        # add connections
+        self.leftMagnetPosition.connect("currentIndexChanged(int)", self.updateLeftMagnetPos)
 
 
 if __name__ == '__main__':

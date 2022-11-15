@@ -58,6 +58,9 @@ class MainWindow(qt.QMainWindow):
         # add connections
         self.leftMagnetPosition.connect("currentIndexChanged(int)", self.updateLeftMagnetPos)
 
+    def updateLeftMagnetPos(self):
+        
+
 
 if __name__ == '__main__':
     app = qt.QApplication(sys.argv)

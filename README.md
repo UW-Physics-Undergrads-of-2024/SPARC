@@ -7,7 +7,7 @@ There are two main components to this software that need to be completed. The fi
 
 A third, optional component, is to begin looking at developing a script that can run in the background to simulate the curves in real time to changes in the positioning of the magnets or changes to the voltage supply. The goal is to create a script that is fast enough to render at least 20 frames per second so that the apparatus being simulated isn't limited to a number of preset conditions. This will likely involve using a program written in another language that can be called from python. 
 
-The documentation folder will contain files that document the physics involved that are modelled by the simulation. 
+The documentation folder will contain files that document the physics involved that are modelled by the simulation.  
 
 Within the source folder is all the source code used to build this program. The main.py file is the source code for the entire project. To allow different components to be developed in parallel, there are additional subfolders containing files related to each of the three main components listed above. With each successive iteration of the python scripts for each component, we will append or update the scripts contained in the main file. 
 

@@ -1,4 +1,5 @@
 import scipy as sp
+import scipy.constants as scp
 import numpy as np
 
 def ClassicalBeam(V: int, LM: int, RM: int):
@@ -13,8 +14,8 @@ def ClassicalBeam(V: int, LM: int, RM: int):
     '''
 
     # Define charge q_e and rest mass m_e of an electron
-    q_e = 1.60217663e-19
-    m_e = 9.1093837e-31
+    q_e = (scp.physical_constants["elementary charge"])[0]
+    m_e = scp.m_e
 
     # Find speed v_e of electron at the start of its trajectory
     v_e = np.sqrt(2*(V*q_e)/m_e)
@@ -38,14 +39,14 @@ def RelativisticBeam(V: int, LM: int, RM: int):
     '''
 
     # Declare a constant for the speed of light
-    CONST_c = 299792458
+    CONST_c = scp.c
 
     # Define charge q_e and rest mass m_e of an electron
-    q_e = 1.60217663e-19
-    m_e = 9.1093837e-31
+    q_e = (scp.physical_constants["elementary charge"])[0]
+    m_e = scp.m_e
 
     # Find speed v_e of electron at the start of its trajectory
-    v_e = c*np.sqrt(1-(1/(1+V*q_e/(m_e*CONST_c**2)))**2)
+    v_e = CONST_c*np.sqrt(1-(1/(1+V*q_e/(m_e*CONST_c**2)))**2)
 
     # Define initial velocity vector of electron. By convention, we will set the forward axis of the electron gun
     # assembly as the y-axis, with the direction of the right magnet being given by positive x-axis. By the right hand
@@ -55,3 +56,4 @@ def RelativisticBeam(V: int, LM: int, RM: int):
     # [code for defining magnetic field]
 
 if __name__ == '__main__':
+    pass

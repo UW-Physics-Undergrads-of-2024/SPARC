@@ -1,7 +1,9 @@
 import PyQt6.QtWidgets as qt
 import PyQt6.QtGui as qtg
 import vispy.scene as vp
-import vispy.geometry as geo
+import vispy.geometry as vg
+import numpy as np
+from vispy.visuals.transforms import STTransform, MatrixTransform
 import sys
 class MainWindow(qt.QMainWindow):
     def __init__(self):
@@ -32,13 +34,30 @@ class MainWindow(qt.QMainWindow):
         # set QMainWindow's central widget to centralWidget QWidget*
         self.setCentralWidget(self.centralWidget)
 
-        # Add vispy canvas to canvas layout
+        # *********** Set Vispy Canvas ********************************
         self.canvas = vp.SceneCanvas(bgcolor=(0.788, 0.765, 0.776, 0.8))
         self.view = self.canvas.central_widget.add_view()
+        self.view.camera = "arcball"
         self.canvasLayout.layout().addWidget(self.canvas.native)
 
-        # Add vacuum tube assembly (cylinder as placeholder for now) to view
-        self.vacuum = geo.generation.create_cylinder(rows = 10, cols = 10, radius=[1.0, 1.0], length = 10)
+        # Add XYZ
+        self.axis = vp.visuals.XYZAxis(parent=self.view)
+        stransform = STTransform(translate=(50, 50), scale=(50, 50, 50, 1))
+        affine = stransform.as_matrix()
+        self.axis.transform = affine
+
+        # Set initial view angle.
+        self.view.camera.azimuth = 0
+        self.view.camera.elevation = 0
+
+        # <WIP> Add vacuum tube assembly (cylinder as placeholder for now) to view.
+        # TODO: use vispy.io to import mesh created in blender and add shader
+
+        self.cylinder = vg.generation.create_cylinder(2, 36, radius=[1.0, 1.0], length=1.0, offset=False)
+        vertices = self.cylinder.get_vertices()
+        faces = self.cylinder.get_faces()
+        self.vacuum = vp.visuals.Mesh(vertices, faces, color='blue')
+
         self.view.add(self.vacuum)
 
         # Add labelled combo box for left magnet position

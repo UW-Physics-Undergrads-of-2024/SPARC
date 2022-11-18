@@ -1,10 +1,11 @@
 import PyQt6.QtWidgets as qt
 import PyQt6.QtGui as qtg
 import vispy.scene as vp
-import vispy.geometry as vg
 import numpy as np
-from vispy.visuals.transforms import STTransform, MatrixTransform
+import vispy.visuals as vv
+
 import sys
+import trimesh
 class MainWindow(qt.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -42,7 +43,7 @@ class MainWindow(qt.QMainWindow):
 
         # Add XYZ
         self.axis = vp.visuals.XYZAxis(parent=self.view)
-        stransform = STTransform(translate=(50, 50), scale=(50, 50, 50, 1))
+        stransform = vv.transforms.STTransform(translate=(50, 50), scale=(50, 50, 50, 1))
         affine = stransform.as_matrix()
         self.axis.transform = affine
 
@@ -50,15 +51,20 @@ class MainWindow(qt.QMainWindow):
         self.view.camera.azimuth = 0
         self.view.camera.elevation = 0
 
-        # <WIP> Add vacuum tube assembly (cylinder as placeholder for now) to view.
-        # TODO: use vispy.io to import mesh created in blender and add shader
+        # Add board that all components will be mounted on
+        boardMesh = trimesh.load("SPARC_board.stl")
+        board = vp.visuals.Mesh(vertices=boardMesh.vertices, faces=boardMesh.faces, color=(0.8,0.4,0,1))
+        self.view.add(board)
 
-        self.cylinder = vg.generation.create_cylinder(2, 36, radius=[1.0, 1.0], length=1.0, offset=False)
-        vertices = self.cylinder.get_vertices()
-        faces = self.cylinder.get_faces()
-        self.vacuum = vp.visuals.Mesh(vertices, faces, color='blue')
+        # Add vacuum tube assembly to view
+        vacuumMesh = trimesh.load("SPARC_vacuum.stl")
+        vacuum = vp.visuals.Mesh(vertices=vacuumMesh.vertices, faces=vacuumMesh.faces, color='blue')
+        vacuum.attach(vv.filters.Alpha(0.2)) # makes mesh semi-transparent
 
-        self.view.add(self.vacuum)
+        self.view.add(vacuum)
+
+        # Add phosphor screen
+
 
         # Add labelled combo box for left magnet position
         self.labelLeftMagnet = qt.QLabel(self)

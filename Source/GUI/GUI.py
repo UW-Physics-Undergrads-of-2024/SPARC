@@ -64,7 +64,9 @@ class MainWindow(qt.QMainWindow):
         self.view.add(vacuum)
 
         # Add phosphor screen
-
+        phosphorMesh = trimesh.load("SPARC_phosphor.stl")
+        phosphorScreen = vp.visuals.Mesh(vertices=phosphorMesh.vertices, faces=phosphorMesh.faces, color=(0, 1, 0, 1))
+        self.view.add(phosphorScreen)
 
         # Add labelled combo box for left magnet position
         self.labelLeftMagnet = qt.QLabel(self)

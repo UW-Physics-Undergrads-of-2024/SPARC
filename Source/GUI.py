@@ -65,6 +65,12 @@ class MainWindow(qt.QMainWindow):
         vacuum.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuum)
 
+        # Add vacuum tube assembly to view
+        vacuumMountMesh = trimesh.load("SPARC_vacuum_mount.stl")
+        vacuumMount = vp.visuals.Mesh(vertices=vacuumMountMesh.vertices, faces=vacuumMountMesh.faces, color=(1,1,0.6,1))
+        vacuumMount.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
+        self.view.add(vacuumMount)
+
         # Add phosphor screen
         phosphorMesh = trimesh.load("SPARC_phosphor.stl")
         phosphorScreen = vp.visuals.Mesh(vertices=phosphorMesh.vertices, faces=phosphorMesh.faces, color=(0, 1, 0, 1))

@@ -1,5 +1,5 @@
 # SPARC
-Visualization software for the Student Particle Accelerator Reduced-atmosphere Chamber. The program generates a 3D render of the electron beam's path through the magnetic field in the SPARC apparatus.
+Visualization software for the Student Particle Accelerator Reproduction Complex. The program generates a 3D render of the electron beam's path through the magnetic field in the SPARC apparatus.
 
 The python implementation of this program will use tkinter or an equivalent library to create a GUI app. The GUI will consist of at least one page with a 3D viewer widget that displays a plot and has buttons for controlling the viewing angle and the parameters being simulated. The app will allow the user to select a list of inputs for the magnets position, the voltage, and the amperage of the power source. Upon loading, the app will generate all the curves corresponding with each set of inputs and the objects associated with that combination of inputs into the 3D viewer. 
 

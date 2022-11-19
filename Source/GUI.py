@@ -48,7 +48,7 @@ class MainWindow(qt.QMainWindow):
         axis.transform = affine
 
         # Set initial camera position and orientation
-        self.view.camera.azimuth = 0
+        self.view.camera.azimuth = -15
         self.view.camera.elevation = 30
         self.view.camera.distance = 15
 

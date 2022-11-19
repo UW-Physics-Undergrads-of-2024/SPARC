@@ -42,14 +42,15 @@ class MainWindow(qt.QMainWindow):
         self.canvasLayout.layout().addWidget(self.canvas.native)
 
         # Add XYZ
-        self.axis = vp.visuals.XYZAxis(parent=self.view)
-        stransform = vv.transforms.STTransform(translate=(50, 50), scale=(50, 50, 50, 1))
+        axis = vp.visuals.XYZAxis(parent=self.view.scene)
+        stransform = vv.transforms.STTransform(translate=(-5, -5), scale=(1, 1, 1, 1))
         affine = stransform.as_matrix()
-        self.axis.transform = affine
+        axis.transform = affine
 
-        # Set initial view angle.
+        # Set initial camera position and orientation
         self.view.camera.azimuth = 0
-        self.view.camera.elevation = 0
+        self.view.camera.elevation = 30
+        self.view.camera.distance = 15
 
         # Add board that all components will be mounted on
         boardMesh = trimesh.load("SPARC_board.stl")

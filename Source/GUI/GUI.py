@@ -36,9 +36,9 @@ class MainWindow(qt.QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         # *********** Set Vispy Canvas ********************************
-        self.canvas = vp.SceneCanvas(bgcolor=(0.788, 0.765, 0.776, 0.8))
+        self.canvas = vp.SceneCanvas(title="Simulated SPARC", keys="interactive", bgcolor=(0.309, 0.345, 0.454, 1.0))
         self.view = self.canvas.central_widget.add_view()
-        self.view.camera = "arcball"
+        self.view.camera = "turntable"
         self.canvasLayout.layout().addWidget(self.canvas.native)
 
         # Add XYZ
@@ -54,18 +54,20 @@ class MainWindow(qt.QMainWindow):
         # Add board that all components will be mounted on
         boardMesh = trimesh.load("SPARC_board.stl")
         board = vp.visuals.Mesh(vertices=boardMesh.vertices, faces=boardMesh.faces, color=(0.8,0.4,0,1))
+        board.attach(vv.filters.mesh.ShadingFilter(shading="smooth", ))
         self.view.add(board)
 
         # Add vacuum tube assembly to view
         vacuumMesh = trimesh.load("SPARC_vacuum.stl")
         vacuum = vp.visuals.Mesh(vertices=vacuumMesh.vertices, faces=vacuumMesh.faces, color='blue')
         vacuum.attach(vv.filters.Alpha(0.2)) # makes mesh semi-transparent
-
+        vacuum.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuum)
 
         # Add phosphor screen
         phosphorMesh = trimesh.load("SPARC_phosphor.stl")
         phosphorScreen = vp.visuals.Mesh(vertices=phosphorMesh.vertices, faces=phosphorMesh.faces, color=(0, 1, 0, 1))
+        phosphorScreen.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(phosphorScreen)
 
         # Add labelled combo box for left magnet position

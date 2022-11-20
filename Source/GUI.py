@@ -17,10 +17,8 @@ class MainWindow(qt.QMainWindow):
         self.setWindowTitle("SPARC Visualizer")
         self.setGeometry(100, 100, 600, 600)
 
-        # ******** Add widgets ************
+        # Add QWidget as central widget
         self.centralWidget = qt.QWidget()
-
-        # ******** Configure layout *******
 
         # Create layouts
         self.topLevelLayout = qt.QVBoxLayout()
@@ -53,30 +51,35 @@ class MainWindow(qt.QMainWindow):
         self.view.camera.distance = 15
 
         # Add board that all components will be mounted on
-        boardMesh = trimesh.load("SPARC_board.stl")
+        boardMesh = trimesh.load(r"Mesh/SPARC_board.stl")
         board = vp.visuals.Mesh(vertices=boardMesh.vertices, faces=boardMesh.faces, color=(0.8,0.4,0,1))
         board.attach(vv.filters.mesh.ShadingFilter(shading="smooth", ))
         self.view.add(board)
 
         # Add vacuum tube assembly to view
-        vacuumMesh = trimesh.load("SPARC_vacuum.stl")
+        vacuumMesh = trimesh.load(r"Mesh/SPARC_vacuum.stl")
         vacuum = vp.visuals.Mesh(vertices=vacuumMesh.vertices, faces=vacuumMesh.faces, color='blue')
         vacuum.attach(vv.filters.Alpha(0.2)) # makes mesh semi-transparent
         vacuum.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuum)
 
-        # Add vacuum tube assembly to view
-        vacuumMountMesh = trimesh.load("SPARC_vacuum_mount.stl")
+        # ****************** Add vacuum tube assembly to view ***************************
+
+        # Add vacuum tube itself
+        vacuumMountMesh = trimesh.load(r"Mesh/SPARC_vacuum_mount.stl")
         vacuumMount = vp.visuals.Mesh(vertices=vacuumMountMesh.vertices, faces=vacuumMountMesh.faces, color=(1,1,0.6,1))
         vacuumMount.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuumMount)
 
+        # ****************** End of vacuum tube assembly *****************************
+
         # Add phosphor screen
-        phosphorMesh = trimesh.load("SPARC_phosphor.stl")
+        phosphorMesh = trimesh.load(r"Mesh/SPARC_phosphor.stl")
         phosphorScreen = vp.visuals.Mesh(vertices=phosphorMesh.vertices, faces=phosphorMesh.faces, color=(0, 1, 0, 1))
         phosphorScreen.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(phosphorScreen)
 
+        # ****************** End of canvas configuration *********************************
         # Add labelled combo box for left magnet position
         self.labelLeftMagnet = qt.QLabel(self)
         self.labelLeftMagnet.setText("Left Magnet Pos.")

@@ -71,6 +71,11 @@ class MainWindow(qt.QMainWindow):
         vacuumMount.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuumMount)
 
+        # Add copper coil anode
+        anodeMesh = trimesh.load(r"Mesh/SPARC_vacuum_anode.stl")
+        anode = vp.visuals.Mesh(vertices=anodeMesh.vertices, faces=anodeMesh.faces, color=(0.7216, 0.451, 0.2, 1))
+        self.view.add(anode)
+
         # ****************** End of vacuum tube assembly *****************************
 
         # Add phosphor screen

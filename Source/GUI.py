@@ -110,7 +110,6 @@ class MainWindow(qt.QMainWindow):
         # Add button widget to load scene
         self.setSceneButton = qt.QPushButton(self)
         self.setSceneButton.setText("Load Scene")
-        self.setSceneButton.setStyleSheet("border: 1px solid black;")
         self.inputLayout.layout().addWidget(self.setSceneButton,1, 1)
 
         # Add connection

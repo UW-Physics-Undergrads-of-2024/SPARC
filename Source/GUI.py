@@ -6,6 +6,7 @@ import vispy.visuals as vv
 
 import sys
 import trimesh
+
 class MainWindow(qt.QMainWindow):
     def __init__(self):
         super().__init__()

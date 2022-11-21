@@ -11,4 +11,6 @@ All documentation for the software, the hardware, and the underlying physics can
 
 Within the source folder is all the source code used to build this program. The main.py file is the source code for the entire project. To allow different components to be developed in parallel, there are additional subfolders containing files related to each of the three main components listed above. With each successive iteration of the python scripts for each component, we will append or update the scripts contained in the main file. 
 
-The build folder contains executables built from the source code that can be run on Windows. In the future, compatability with Mac and Linux is planned.
+Build Instruction
+-----------------
+The app is not yet completed for build purposes.

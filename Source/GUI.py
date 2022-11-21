@@ -3,6 +3,7 @@ import PyQt6.QtGui as qtg
 import vispy.scene as vs
 import numpy as np
 import vispy.visuals as vv
+import time
 
 import sys
 import trimesh
@@ -129,6 +130,9 @@ class MainWindow(qt.QMainWindow):
         :return: numpy 3x100 array
         '''
 
+        # time the function
+        start = time.time()
+
         # Determine line width based on voltage
         V = 0
         if Voltage == "10kV":
@@ -153,6 +157,8 @@ class MainWindow(qt.QMainWindow):
 
         # Create line in vispy and add it to scene canvas
         self.curve.set_data(curvePoints, width=V)
+        end = time.time()
+        print(end-start)
 
 
 if __name__ == '__main__':

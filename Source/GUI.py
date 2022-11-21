@@ -111,7 +111,8 @@ class MainWindow(qt.QMainWindow):
         # Add button widget to load scene
         self.setSceneButton = qt.QPushButton(self)
         self.setSceneButton.setText("Load Scene")
-        self.inputLayout.layout().addWidget(self.setSceneButton,1, 1)
+        # addWidget(QWidget, row, column, rowSpan, columnSpan)
+        self.inputLayout.layout().addWidget(self.setSceneButton, 1, 0, 1, 2)
 
         # Add connection
         self.setSceneButton.clicked.connect(lambda: self.addTrajectory(Voltage=self.voltageSelector.currentText()))

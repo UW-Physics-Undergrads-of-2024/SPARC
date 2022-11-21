@@ -84,61 +84,57 @@ class MainWindow(qt.QMainWindow):
         phosphorScreen.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(phosphorScreen)
 
+        # ****************** Add trajectory curve ****************************************
+
+        # Declare numpy array for the x,y, and z coordinates of points along the curve
+        # Array is left uninitialized. This is because the curve will only be rendered
+        # when the setScene button is clicked, not when the app is loaded.
+        curvePoints = np.empty([1, 3])
+        self.curve = vs.Line(curvePoints, color="blue", width=1)
+        self.view.add(self.curve)
+
+        # ****************** End of trajectory curve *************************************
+
         # ****************** End of canvas configuration *********************************
-        # Add labelled combo box for left magnet position
-        self.labelLeftMagnet = qt.QLabel(self)
-        self.labelLeftMagnet.setText("Left Magnet Pos.")
-        self.labelLeftMagnet.setStyleSheet("border: 1px solid black;")
-        self.inputLayout.layout().addWidget(self.labelLeftMagnet,0,0)
-
-        self.leftMagnetPosition = qt.QComboBox(self)
-        self.leftMagnetPosition.addItems(["1", "2", "3"])
-        self.inputLayout.layout().addWidget(self.leftMagnetPosition,0,1)
-
-        # Add labelled combo box for right magnet position
-        self.labelRightMagnet = qt.QLabel(self)
-        self.labelRightMagnet.setText("Right Magnet Pos.")
-        self.labelRightMagnet.setStyleSheet("border: 1px solid black;")
-        self.inputLayout.layout().addWidget(self.labelRightMagnet,0,2)
-
-        self.rightMagnetPosition = qt.QComboBox(self)
-        self.rightMagnetPosition.addItems(["1", "2", "3"])
-        self.inputLayout.layout().addWidget(self.rightMagnetPosition,0,3)
 
         # Add labelled combo box for voltage
         self.labelVoltage = qt.QLabel(self)
         self.labelVoltage.setText("Voltage")
         self.labelVoltage.setStyleSheet("border: 1px solid black;")
-        self.inputLayout.layout().addWidget(self.labelVoltage,1,0)
+        self.inputLayout.layout().addWidget(self.labelVoltage,0,0)
 
         self.voltageSelector = qt.QComboBox(self)
         self.voltageSelector.addItems(["10kV", "20kV", "50kV"])
-        self.inputLayout.layout().addWidget(self.voltageSelector,1,1)
+        self.inputLayout.layout().addWidget(self.voltageSelector,0,1)
 
         # Add button widget to load scene
         self.setSceneButton = qt.QPushButton(self)
         self.setSceneButton.setText("Load Scene")
         self.setSceneButton.setStyleSheet("border: 1px solid black;")
-        self.inputLayout.layout().addWidget(self.setSceneButton,1,2)
+        self.inputLayout.layout().addWidget(self.setSceneButton,1, 1)
 
-    def addTrajectory(self, Voltage: float):
+        # Add connection
+        self.setSceneButton.clicked.connect(lambda: self.addTrajectory(Voltage=self.voltageSelector.currentText()))
+
+    def addTrajectory(self, Voltage: str):
         '''
         addTrajectory adds a curve from the vacuum tube to the phosphor screen simulating the trajectory of the electron
         beam. The curve will consist of 100 points. For the base configuraiton, this will just be a straight line.
         For the extensions, this function will need to use an extrapolating algorithm to generate points sequentially
         based on the equation of motion of the electrons. This function is a WIP and will preferably use a C++ library
         in the future for added efficiency.
-        :param Voltage: voltage of the power source
+
+        :param Voltage: string of voltage of the power source from QComboBox
         :return: numpy 3x100 array
         '''
 
         # Determine line width based on voltage
         V = 0
-        if Voltage < 10000:
+        if Voltage == "10kV":
             V = 1
-        if 10000 < Voltage & Voltage < 50000:
-            V = 3
-        if 50000 < Voltage:
+        if Voltage == "20kV":
+            V = 2
+        if Voltage == "50kV":
             V = 5
         # Declare numpy arrays for the x,y, and z coordinates of points along the curve
         xcoords = np.zeros(100)
@@ -146,7 +142,7 @@ class MainWindow(qt.QMainWindow):
         zcoords = np.array([1.3 for x in range(0,100)])
 
         # Declare uninitialized 3x100 array to store points on curve
-        curvePoints = np.empty(100,3)
+        curvePoints = np.empty([100,3])
 
         # Add coordinates to curve
         for i in range(0,100):
@@ -155,8 +151,7 @@ class MainWindow(qt.QMainWindow):
             (curvePoints[i])[2] = zcoords[i]
 
         # Create line in vispy and add it to scene canvas
-        curve = vs.Line(curvePoints, colo="blue", width=V)
-        self.view.add(curve)
+        self.curve.set_data(curvePoints, width=V)
 
 
 if __name__ == '__main__':

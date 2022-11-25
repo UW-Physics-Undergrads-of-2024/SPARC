@@ -8,6 +8,8 @@ import time
 import sys
 import trimesh
 
+#bruh
+
 class MainWindow(qt.QMainWindow):
     def __init__(self):
         super().__init__()

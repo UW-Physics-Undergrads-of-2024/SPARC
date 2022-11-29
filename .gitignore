@@ -134,5 +134,3 @@ dmypy.json
 # Visual Studio
 .vs/
 
-# pybind11
-pybind11/

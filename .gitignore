@@ -130,3 +130,6 @@ dmypy.json
 
 # file: ~/.gitignore_global
 .idea/
+
+# Visual Studio
+.vs/

@@ -1,10 +1,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
-#include <pybind11/common.h>
+#include <cmath> // exponential
 #include "Trajectory.h"
 
 namespace py = pybind11;
-
 py::array_t<double> classicalBeam(const int& voltage)
 {
 	double position[100][3];

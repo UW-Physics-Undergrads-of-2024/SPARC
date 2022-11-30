@@ -8,3 +8,9 @@ To build the python module, use:
 ```console
 cmake -D DBUILD_VS_PROJECT=OFF ../
 ```
+
+## Initiate pybind11 submodule
+If you clone or pull the repository and the pybind11 folder is empty, use:
+```console
+git submodule update --init
+```

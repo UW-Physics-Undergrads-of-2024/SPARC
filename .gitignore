@@ -139,4 +139,3 @@ pybind11/
 x64/ # This is the default location for executables, but since we are building a library, it is unused
 CMakeFiles/ # These are logs that change everytime something is rebuilt
 CMakeCache.txt
-.user/

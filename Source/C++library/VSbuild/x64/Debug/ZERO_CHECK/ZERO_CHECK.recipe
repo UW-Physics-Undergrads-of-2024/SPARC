@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\dev\SPARC\Source\C++library\build\x64\Debug\ZERO_CHECK</FullPath>
+      <FullPath>C:\dev\SPARC\Source\C++library\VSbuild\x64\Debug\ZERO_CHECK</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

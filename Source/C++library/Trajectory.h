@@ -3,6 +3,7 @@
 #include <cmath> // exponential
 
 namespace py = pybind11;
+
 const double mass_electron = 9.1093837015*std::pow(10, -31);
 const double charge_electron = -1.602176634 * std::pow(10, -19);
 

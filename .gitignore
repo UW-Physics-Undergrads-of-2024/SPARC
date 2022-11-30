@@ -133,7 +133,9 @@ dmypy.json
 
 # Visual Studio
 .vs/
+<<<<<<< HEAD
 VSbuild/
 CMakeFiles/
 x64/
-
+CMakeCache.txt
+.user/

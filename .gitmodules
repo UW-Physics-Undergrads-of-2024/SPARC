@@ -1,3 +1,4 @@
-[submodule "Source/C++library/pybind11"]
-	path = Source/C++library/pybind11
+[submodule "extern/pybind11"]
+	path = extern/pybind11
 	url = https://github.com/pybind/pybind11.git
+	branch = stable

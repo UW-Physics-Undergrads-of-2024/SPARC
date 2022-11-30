@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 20)
 project(Trajectory)
-set(EXTERNAL_LIB_HEADERS "pybind11")
+set(EXTERNAL_LIB_HEADERS "../../extern/pybind11")
 
 # Add an option to either build a VS solution or a python module
 option(BUILD_VS_PROJECT "Build VS solution project" ON)

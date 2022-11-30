@@ -1,6 +1,6 @@
-#include <pybind11.h>
-#include <numpy.h>
-#include <common.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
+#include <pybind11/common.h>
 #include "Trajectory.h"
 
 namespace py = pybind11;

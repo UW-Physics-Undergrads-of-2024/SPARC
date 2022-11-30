@@ -1,3 +1,0 @@
-C:/dev/SPARC/Source/C++library/build/CMakeFiles/Trajectory.dir
-C:/dev/SPARC/Source/C++library/build/CMakeFiles/ALL_BUILD.dir
-C:/dev/SPARC/Source/C++library/build/CMakeFiles/ZERO_CHECK.dir

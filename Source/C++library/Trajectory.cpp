@@ -3,6 +3,9 @@
 #include <pybind11/common.h>
 #include "Trajectory.h"
 
+#include <functional>
+
+
 namespace py = pybind11;
 
 py::array_t<double> classicalBeam(const int& voltage)
@@ -24,8 +27,12 @@ py::array_t<double> classicalBeam(const int& voltage)
 	return beam;
 }
 
+// Hours wasted on PYBIND11_MODULE Bug: 6
+
 PYBIND11_MODULE(Trajectory, SPARC)
 {
 	SPARC.doc() = "A function that takes the voltage across the electrodes in the SPARC electron gun and produces a numpy array for the pointwise representation of the trajectory curve.";
 	SPARC.def("trajectoryClassical", &classicalBeam);
 }
+
+PYBIND11_NAMESPACE()

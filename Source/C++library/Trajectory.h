@@ -1,5 +1,5 @@
-#include <pybind11.h>
-#include <numpy.h>
+#include <pybind11/pybind11.h>
+#include <pybind11/numpy.h>
 #include <cmath> // exponential
 
 namespace py = pybind11;

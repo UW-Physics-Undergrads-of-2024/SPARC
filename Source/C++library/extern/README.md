@@ -1,1 +1,0 @@
-Directory for third party libraries on GitHub added as submodules.

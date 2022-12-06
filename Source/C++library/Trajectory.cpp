@@ -8,18 +8,34 @@ namespace py = pybind11;
 
 py::array_t<double> classicalBeam(const int& voltage)
 {
-	double position[100][3];
-	double velocity[99][3];
-	double acceleration[98][3];
+	std::vector<std::vector<double>> position;
+	std::vector<double> next_position;
+	std::vector<double> velocity;
 
-	// Define the initial values of these quantities to be initially zero
-	for (unsigned int i = 0; i < 3; i++)
+	// Electron starts at the origin at rest
+	position[0] = {0,0,0};
+
+
+	// The separation between the electrodes, which are parallel plates, is 5cm
+	// To get the electric field, we simply divide the voltage by the separation 
+	// and the quotient scaled by negative one is the electric field strength
+	double EField = -capacitor_gap / voltage; // the separation is in meters and the voltage in volts
+	double CoulombsForce = EField * charge_electron;
+
+
+	velocity[0] = 0;
+	velocity[1] = delta * CoulombsForce / mass_electron;
+	velocity[2] = 0;
+
+	while (position.back()[1] != 0.5)
 	{
-		position[0][i] = 0;
-		velocity[0][i] = 0;
-		acceleration[0][i] = 0;
-	}
+		for (uint16_t i; i < 3; i++)
+		{
+			next_position[i] = position.back()[i] + velocity[i] * delta;
 
+		}
+		position.push_back(next_position);
+	}
 	py::array_t<double> beam = py::array_t<double>();
 
 	return beam;
@@ -30,6 +46,5 @@ py::array_t<double> classicalBeam(const int& voltage)
 
 PYBIND11_MODULE(Trajectory, trajectory)
 {
-	trajectory.doc() = "This is some module docs";
-	trajectory.def("some_fn_python_name", &classicalBeam);
+	trajectory.doc() = "";
 }

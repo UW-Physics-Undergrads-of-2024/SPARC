@@ -1,9 +1,7 @@
-#include "extern/pybind11/include/pybind11/pybind11.h"
-#include "extern/pybind11/include/pybind11/numpy.h"
-#include "extern/pybind11/include/pybind11/detail/common.h"
+#include "pybind11/pybind11.h"
+#include "pybind11/numpy.h"
 #include <cmath> // exponential
 #include "Trajectory.h"
-#include <functional>
 
 
 namespace py = pybind11;
@@ -27,6 +25,11 @@ py::array_t<double> classicalBeam(const int& voltage)
 	return beam;
 }
 
-// Hours wasted on PYBIND11_MODULE Bug: 6
+// Hours wasted on PYBIND11_MODULE Bug: 7
+// Fixed: Don't try to build an executable using CMake like a dumbass
 
-PYBIND11_MODULE
+PYBIND11_MODULE(Trajectory, trajectory)
+{
+	trajectory.doc() = "This is some module docs";
+	trajectory.def("some_fn_python_name", &classicalBeam);
+}

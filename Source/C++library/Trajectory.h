@@ -19,3 +19,4 @@ constexpr double b_field = 0.01; // magnetic flux density in the x-axis. Note th
 * @return beam is the 100x3 numpy array representing points along the trajectory of the electron
 */
 py::array_t<double> classicalBeam(const int& voltage);
+

@@ -3,5 +3,3 @@ set(CMAKE_CXX_STANDARD 20)
 project(Trajectory)
 add_subdirectory(pybind11)
 pybind11_add_module(Trajectory Trajectory.cpp Trajectory.h)
-
-

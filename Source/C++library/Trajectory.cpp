@@ -47,4 +47,9 @@ py::array_t<double> classicalBeam(const int& voltage)
 PYBIND11_MODULE(Trajectory, trajectory)
 {
 	trajectory.doc() = "";
+	trajectory.attr("mass_electron") = py::cast(mass_electron);
+	trajectory.attr("charge_electron") = py::cast(charge_electron);
+	trajectory.attr("capacitor_gap") = py::cast(capacitor_gap);
+	trajectory.attr("delta") = py::cast(delta);
+	trajectory.attr("b_field") = py::cast(b_field);
 }

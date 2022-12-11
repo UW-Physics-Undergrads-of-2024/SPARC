@@ -1,7 +1,8 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
+#include <pybind11/stl.h>
 #include "SPARC.h"
-
+#include <iostream>
 
 namespace py = pybind11;
 
@@ -11,8 +12,8 @@ std::vector<std::vector<double>> classicalBeam(const double& voltage, const doub
 	
 	py::gil_scoped_release release;
 
-	// The electron starts at the origin at rest
-	std::vector<std::vector<double>> positionSet = { {0,0,0} };
+	// The electron starts at the 0.13 meters above the origin
+	std::vector<std::vector<double>> positionSet = { {0,0,1.3} };
 	std::vector<double> velocity = { {0,0,0} };
 	
 	// The initial acceleration IS NOT zero, but we need to initialize this vector first
@@ -23,10 +24,9 @@ std::vector<std::vector<double>> classicalBeam(const double& voltage, const doub
 	std::vector<double> acceleration = { {0,0,0} };
 
 
-	// The separation between the electrodes, which are parallel plates, is 10cm
 	// To get the electric field, we simply divide the voltage by the separation 
 	// and the quotient scaled by negative one is the electric field strength
-	double EField = -capacitor_gap / voltage; // the separation is in meters and the voltage in volts
+	double EField = -voltage/ capacitor_gap; // the separation is in meters and the voltage in volts
 	double CoulombsForce = EField * charge_electron;
 
 	
@@ -42,7 +42,7 @@ std::vector<std::vector<double>> classicalBeam(const double& voltage, const doub
 	// as the position. However, the past instances of velocity and acceleration
 	// do not need to be tracked, so are kept as one dimensional vectors to be
 	// overwritten in each loop.
-	while (positionSet.back()[1] <= capacitor_gap)
+	while (positionSet.back()[1] <= 10*capacitor_gap)
 	{
 		positionSet.push_back(next_position);
 		
@@ -56,7 +56,7 @@ std::vector<std::vector<double>> classicalBeam(const double& voltage, const doub
 		}
 		
 	}
-
+	
 	return positionSet;
 }
 
@@ -72,7 +72,7 @@ PYBIND11_MODULE(SPARC, SPARC)
 	SPARC.attr("charge_electron") = py::float_(charge_electron);
 	SPARC.attr("capacitor_gap") = py::float_(capacitor_gap);
 	SPARC.attr("delta") = py::float_(delta);
-	SPARC.def("classical_beam", [](const double& voltage, const double& b_field)
-		{py::array out = py::cast(classicalBeam(voltage, b_field));
-		 return out; });
+	SPARC.def("classical_beam", [](double voltage, double b_field)
+		{std::vector<std::vector<double>> out = classicalBeam(voltage, b_field);
+	return out; });
 }

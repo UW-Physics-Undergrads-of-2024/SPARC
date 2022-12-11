@@ -7,7 +7,7 @@ def ClassicalBeam(V: int, LM: int, RM: int):
     ClassicalBeam takes the inputs of the SPARC apparatus and simulates the trajectory of the electron beam using
     non-relativistic models of physics
 
-    :param V: Voltage input
+    @param  V: Voltage input
     :param LM: Left Magnet Position
     :param RM:  Right Magnet Position
     :return: np.array

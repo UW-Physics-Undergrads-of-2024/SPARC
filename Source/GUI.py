@@ -3,7 +3,8 @@ import PyQt6.QtGui as qg
 import vispy.scene as vs
 import numpy as np
 import vispy.visuals as vv
-import time, sys, trimesh, linecache
+import sys, trimesh, linecache
+from time import process_time
 import SPARC
 
 
@@ -203,18 +204,15 @@ class MainWindow(qt.QMainWindow):
             'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
 
         # time the function
-        start = time.time()
-
-        # Determine line width based on voltage
-        V = float(voltage)
+        start = process_time()
 
         voltageInput = V * 10 ** 3
-        b_field = float(magneticField)
 
         curvePoints = SPARC.classical_beam(voltageInput, b_field)
+        curvePoints = np.array([point for point in curvePoints])
         # Create line in vispy and add it to scene canvas
         self.curve.set_data(curvePoints, width=V)
-        end = time.time()
+        end = process_time()
         print(end - start)
 
 

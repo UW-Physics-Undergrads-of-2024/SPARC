@@ -1,26 +1,54 @@
 import PyQt6.QtWidgets as qt
-import PyQt6.QtGui as qtg
+import PyQt6.QtGui as qg
 import vispy.scene as vs
 import numpy as np
 import vispy.visuals as vv
-import time
+import time, sys, trimesh, linecache
+import SPARC
 
-import sys
-import trimesh
 
 class MainWindow(qt.QMainWindow):
+    """
+    A class to generate a GUI app.
+
+    Attributes
+    ----------
+        centralWidget: PyQt6.QWidget
+            The main widget that everything else on the GUI is embedded in
+
+        topLavelLayout: PyQt6.QVBoxLayout
+            A vertically oriented layout that several sub-layout's will be embedded in
+
+        canvasLayout: PyQt6.QHBoxLayout
+            A layout that the vispy SceneCanvas will be embedded in
+
+        inputLayout: PyQt6.QGridLayout
+            A layout that interactive widgets will be embedded in
+
+        canvas: vispy.SceneCanvas
+            A vispy SceneCanvas used to render meshes of the SPARC apparatus and curves that simulate the electron beam
+
+
+
+
+    Methods
+    -------
+
+    """
+
     def __init__(self):
         super().__init__()
 
         # set window icon
-        self.setWindowIcon(qtg.QIcon('icon_temp.png'))
+        self.setWindowIcon(qg.QIcon('icon_temp.png'))
 
         # Set basic dimensions and attributes
         self.setWindowTitle("SPARC Visualizer")
         self.setGeometry(100, 100, 600, 600)
-
-        # Add QWidget as central widget
         self.centralWidget = qt.QWidget()
+        palette = self.centralWidget.palette()
+        palette.setColor(self.centralWidget.backgroundRole(), qg.QColor(0, 0, 139, 255))
+        self.centralWidget.setPalette(palette)
 
         # Create layouts
         self.topLevelLayout = qt.QVBoxLayout()
@@ -54,14 +82,14 @@ class MainWindow(qt.QMainWindow):
 
         # Add board that all components will be mounted on
         boardMesh = trimesh.load(r"Mesh/SPARC_board.stl")
-        board = vs.visuals.Mesh(vertices=boardMesh.vertices, faces=boardMesh.faces, color=(0.8,0.4,0,1))
+        board = vs.visuals.Mesh(vertices=boardMesh.vertices, faces=boardMesh.faces, color=(0.8, 0.4, 0, 1))
         board.attach(vv.filters.mesh.ShadingFilter(shading="smooth", ))
         self.view.add(board)
 
         # Add vacuum tube assembly to view
         vacuumMesh = trimesh.load(r"Mesh/SPARC_vacuum.stl")
         vacuum = vs.visuals.Mesh(vertices=vacuumMesh.vertices, faces=vacuumMesh.faces, color='blue')
-        vacuum.attach(vv.filters.Alpha(0.2)) # makes mesh semi-transparent
+        vacuum.attach(vv.filters.Alpha(0.2))  # makes mesh semi-transparent
         vacuum.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuum)
 
@@ -69,7 +97,8 @@ class MainWindow(qt.QMainWindow):
 
         # Add vacuum tube itself
         vacuumMountMesh = trimesh.load(r"Mesh/SPARC_vacuum_mount.stl")
-        vacuumMount = vs.visuals.Mesh(vertices=vacuumMountMesh.vertices, faces=vacuumMountMesh.faces, color=(1,1,0.6,1))
+        vacuumMount = vs.visuals.Mesh(vertices=vacuumMountMesh.vertices, faces=vacuumMountMesh.faces,
+                                      color=(1, 1, 0.6, 1))
         vacuumMount.attach(vv.filters.mesh.ShadingFilter(shading="smooth"))
         self.view.add(vacuumMount)
 
@@ -101,64 +130,92 @@ class MainWindow(qt.QMainWindow):
 
         # Add labelled combo box for voltage
         self.labelVoltage = qt.QLabel(self)
-        self.labelVoltage.setText("Voltage")
+        self.labelVoltage.setText("Voltage (kilovolt)")
         self.labelVoltage.setStyleSheet("border: 1px solid black;")
-        self.inputLayout.layout().addWidget(self.labelVoltage,0,0)
+        self.inputLayout.layout().addWidget(self.labelVoltage, 0, 0)
 
         self.voltageSelector = qt.QComboBox(self)
-        self.voltageSelector.addItems(["10kV", "20kV", "50kV"])
-        self.inputLayout.layout().addWidget(self.voltageSelector,0,1)
+        self.voltageSelector.addItems(["10", "20", "50"])
+        self.inputLayout.layout().addWidget(self.voltageSelector, 0, 1)
+
+        # Add labelled combo box for magnetic flux density
+        self.labelMagneticField = qt.QLabel(self)
+        self.labelMagneticField.setText("B Field (Teslas)")
+        self.labelMagneticField.setStyleSheet("border: 1px solid black;")
+        self.inputLayout.layout().addWidget(self.labelMagneticField, 1, 0)
+
+        self.magneticFieldSelector = qt.QComboBox(self)
+        self.magneticFieldSelector.addItems(["0", "0.001", "0.01"])
+        self.inputLayout.layout().addWidget(self.magneticFieldSelector, 1, 1)
 
         # Add button widget to load scene
         self.setSceneButton = qt.QPushButton(self)
         self.setSceneButton.setText("Load Scene")
         # addWidget(QWidget, row, column, rowSpan, columnSpan)
-        self.inputLayout.layout().addWidget(self.setSceneButton, 1, 0, 1, 2)
+        self.inputLayout.layout().addWidget(self.setSceneButton, 2, 0, 1, 2)
 
         # Add connection
-        self.setSceneButton.clicked.connect(lambda: self.addTrajectory(Voltage=self.voltageSelector.currentText()))
+        self.setSceneButton.clicked.connect(lambda: self.addTrajectory(voltage=self.voltageSelector.currentText(),
+                                                                       magneticField=self.magneticFieldSelector.currentText()))
 
-    def addTrajectory(self, Voltage: str):
-        '''
+    def addTrajectory(self, voltage: str, magneticField: str):
+        """
+        Summary
+        -------
         addTrajectory adds a curve from the vacuum tube to the phosphor screen simulating the trajectory of the electron
         beam. The curve will consist of 100 points. For the base configuraiton, this will just be a straight line.
         For the extensions, this function will need to use an extrapolating algorithm to generate points sequentially
-        based on the equation of motion of the electrons. This function is a WIP and will preferably use a C++ library
-        in the future for added efficiency.
+        based on the equation of motion of the electrons.
 
-        :param Voltage: string of voltage of the power source from QComboBox
-        :return: numpy 3x100 array
-        '''
+        Note
+        ----
+        This function utilizes a custom library SPARC coded natively in C++, which is an ongoing work in progress and
+        isn't configured to return meaningful error messages. Errors produced from running this function will always
+        trace back to the SPARC library. Since configuring an IDE to debug Python and C++ simultaneously, it's
+        recommended to build a test project using the C++ source code and run the native code within the test project
+        to debug it.
+
+        :param voltage: string representation of float value from QComboBox widget
+        :param magneticField: string representation float value from QComboBox widget
+
+        :type voltage: str
+        :type magneticField: str
+
+        :return: None
+        :rtype: None
+        """
+
+        # In the event of changes to the widgets on the GUI, the ability to convert the strings from the QComboBoxes
+        # to floats will be tested in a try block
+        V = 0
+        b_field = 0
+        try:
+            V = float(voltage)
+            b_field = float(magneticField)
+        except ValueError:
+            exc_type, exc_obj, tb = sys.exc_info()
+            f = tb.tb_frame
+            lineno = tb.tb_lineno
+            filename = f.f_code.co_filename
+            linecache.checkcache(filename)
+            line = linecache.getline(filename, lineno, f.f_globals)
+            print
+            'EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj)
 
         # time the function
         start = time.time()
 
         # Determine line width based on voltage
-        V = 0
-        if Voltage == "10kV":
-            V = 1
-        if Voltage == "20kV":
-            V = 2
-        if Voltage == "50kV":
-            V = 5
-        # Declare numpy arrays for the x,y, and z coordinates of points along the curve
-        xcoords = np.zeros(100)
-        ycoords = np.linspace(-3.65, 4.775, 100)
-        zcoords = np.array([1.3 for x in range(0,100)])
+        V = float(voltage)
 
-        # Declare uninitialized 3x100 array to store points on curve
-        curvePoints = np.empty([100,3])
+        voltageInput = V * 10 ** 3
+        b_field = float(magneticField)
 
-        # Add coordinates to curve
-        for i in range(0,100):
-            (curvePoints[i])[0] = xcoords[i]
-            (curvePoints[i])[1] = ycoords[i]
-            (curvePoints[i])[2] = zcoords[i]
-
+        curvePoints = SPARC.classical_beam(voltageInput, b_field)
         # Create line in vispy and add it to scene canvas
         self.curve.set_data(curvePoints, width=V)
         end = time.time()
-        print(end-start)
+        print(end - start)
 
 
 if __name__ == '__main__':
@@ -166,5 +223,3 @@ if __name__ == '__main__':
     window = MainWindow()
     window.show()
     app.exec()
-
-

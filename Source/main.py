@@ -1,8 +1,12 @@
-import PyQt6 as Qt
-import scipy as sp
-import numpy as np
-import tkinter as tk
-import vispy as vp
+import GUI as gui
+import PyQt6 as qt
+import sys
+def main():
+    app = qt.QApplication(sys.argv)
+    window = gui.MainWindow()
+    window.show()
+    app.exec()
+
 
 
 

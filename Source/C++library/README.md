@@ -1,16 +1,15 @@
 ## CMake configuration 
-The CMakeLists.txt is used to build either a Visual Studios project where the cpp file can be compiled and tested, or the python module using pybind11. To create a Visual Studios project, use the following command:
+The CMakeLists.txt is used to build either a Visual Studios project used for building the python library. Create a new folder for building your VS project in and open that directory in a terminal. Use the following command:
 ```console
-cmake -D DBUILD_VS_PROJECT=ON ../
+cmake ../
 ```
 
-To build the python module, use:
-```console
-cmake -D DBUILD_VS_PROJECT=OFF ../
-```
 
 ## Initiate pybind11 submodule
 If you clone or pull the repository and the pybind11 folder is empty, use:
 ```console
-git submodule update --init
+git submodule init
+```
+```console
+git submodule update
 ```

@@ -11,6 +11,25 @@ Within the source folder is all the source code used to build this program. The 
 
 Additional information can be found in the wiki for this repository.
 
-Build Instruction
------------------
+## [License](https://github.com/UW-Physics-Undergrads-of-2024/SPARC/blob/master/LICENSE)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL_v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
+```
+    The SPARC simulator is the accompanying simulation software for the physical SPARC
+    appratus, simulating the trajectory of the electron beam in the physical complex.
+    Copyright (C) 2022 (Jack) Kuei Hung Zhang, Ameen Yaseen, Kamalesh Paluru
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of version 3 of the GNU Affero General Public License as published
+    by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+    
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see https://www.gnu.org/licenses/
+```
+
+## Build Instruction
 The app is not yet completed for build purposes.

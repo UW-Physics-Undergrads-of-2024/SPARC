@@ -61,10 +61,6 @@ std::vector<std::vector<double>> classicalBeam(const double& voltage, const doub
 }
 
 
-
-// Hours wasted on PYBIND11_MODULE Bug: 7
-// Fixed: Don't try to build an executable using CMake like a dumbass
-
 PYBIND11_MODULE(SPARC, SPARC)
 {
 	SPARC.doc() = "";
